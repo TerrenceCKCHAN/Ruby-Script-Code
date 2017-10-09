@@ -1,1 +1,34 @@
-# edit this file to build your last_touch script as required for question 7.
+#!/usr/bin/ruby
+# last_touch
+require 'date'
+
+allFiles = Dir.glob "**"
+
+
+allFiles.each do |f|
+  date_timeRaw = `git log --pretty=format:"%ad"`
+  date_time    = date_timeRaw.split(" ")
+  rev_id       = `git log --pretty=format:"%h"`
+  author       = `git log --pretty=format:"%an"`
+  dateRaw      = date_time[4] + date_time[1] + date_time[2]
+  date         = Date.parse(dateRaw)
+  time         = date_time[3]
+  timeZoneRaw  = date_time[5]
+  colons       = ":"
+  timeZone     = timeZoneRaw[0..2] + "#{colons}" + timeZoneRaw[3..4]
+  t            = "T"
+  space        = " "
+  openBracket  = "("
+  closeBracket = ")"
+  outputStr    = "#{date}" + "#{t}" + "#{time}" + "#{timeZone}" + 
+                 "#{space}" + "#{f}" + "#{space}" + "#{openBracket}" +
+                 "#{author}" + "#{closeBracket}" 
+  puts "#{outputStr}"
+  
+end
+
+
+
+
+
+

@@ -7,7 +7,10 @@ Question 1:
 How big (how many bytes) is the program code section of the file hello.o?
 Explain how you arrived at your answer, including any mathematical conversions you had to make.
 
-Answer:
+Answer: 
+Under Sections after using the command objdump --all-headers hello.o, 
+I add the size of .text and .data which is 2 * 16 ^ 1 + 2 * 16 ^ 0 + e * 16 ^ 0 = 48 bits in decimal.
+Therefore the answer is 6 bytes.
  
  
 Question 2:
@@ -15,6 +18,8 @@ How many relocation records are there in the file hello.o?
 Name them and explain how you arrived at your answer.
 
 Answer:
+After using the command objdump --all-headers hello.o,
+There is one Relocation records for .text which has value "message"
 
 
 Question 3:
@@ -22,6 +27,11 @@ How many relocation records are there in the file hello (the result of linking h
 Explain how you arrived at your answer. 
 
 Answer:
+There is no Relocation record in the file hello, 
+I generated the file hello by the command ld -N hello.o -o hello,
+then inspected it using the command objdump --all-headers hello.
+There is no Relocation Record shown.
+
 
 
 Question 4:
@@ -30,6 +40,20 @@ What happens if you try to link chello.o using ld as you did with hello.o
 Explain what has happened and how the nm utility can be used to confirm this.
 
 Answer:
+After linking chello.o using ld, all relocation records are resolved
+and a single file with a fixed address is produced. 
+The result is confirmed with the nm command:
+when using nm on chello.o, address of main and message starts at 0.
+when using nm on chello, all symbols are defined and was given a fixed address:
+
+0000000000400156 D __bss_start
+0000000000400156 D _edata
+0000000000400158 D _end
+00000000004000e5 T exitA
+00000000004000b0 T main
+0000000000400148 D message
+00000000004000ef T _start
+00000000004000d9 T writeA
 
  
 Question 5:
@@ -39,6 +63,11 @@ What would happen if you assembled, linked and ran this programs with this instr
 Explain why this happens. Does the program still terminate?
 
 Answer:
+The world "Hello world!" is still printed but there is a Segmentation fault afterwards.
+This is because the program does not terminate correctly and is killed by the OS. 
+Without the exit system call, there is a memory access violation. The program has 
+referred to a memory address outside of what was allocated to it, resulting in a Segmentation fault.
+
 
 
  

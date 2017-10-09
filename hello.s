@@ -10,6 +10,6 @@ _start:
         movl   $0x1, %eax         # eax = code for `exit' system call
         int    $0x80              # make the system call
         .data
-        .globl message
+       .globl message
 message:        
         .string "Hello world!\n"  # The message as data
