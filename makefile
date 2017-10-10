@@ -6,6 +6,7 @@ chello: chello.o writeexit.o
 
 chello.o: chello.c
 	gcc -c chello.c -o chello.o
+
 writeexit.o: writeexit.s
 	as writeexit.s -o writeexit.o
 
