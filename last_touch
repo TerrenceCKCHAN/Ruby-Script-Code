@@ -29,6 +29,14 @@ allFiles.each do |f|
   
 end
 
+if ARGV.count == 0 then
+  targetDir = `pwd`
+elsif ARGV.count == 1 then
+  subDir = ARGV[0].strip
+  if (
+else 
+  puts "Error"
+
 
 
 
