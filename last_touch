@@ -2,6 +2,8 @@
 # last_touch
 require 'date'
 
+targetDir = ARGV[0]
+Dir.chdir("#{targetDir}")
 allFiles = Dir.glob "**"
 
 
