@@ -50,10 +50,10 @@ max      = 0
 
 gitFiles.each do |f|
   removeFile(dirFiles, f) 
-  rev_id         = " [" + `git log --pretty=format:"%h"`.split(" ")[0] + "]: "
-  date_timeRaw   = `git log --pretty=format:"%ad"`
+  rev_id         = " [" + `git log --pretty=format:"%h" -1 #{f}`[0..4] + "]: "
+  date_timeRaw   = `git log --pretty=format:"%ad" #{f}`
   dateTime_revId = extractDateTime_revId(rev_id, date_timeRaw)
-  author         = "(" + `git log --pretty=format:"%an"`.split(" ")[0] + ")"
+  author         = "(" + `git log --pretty=format:"%an" -1 #{f}` + ")"
   if max <= f.length then
     max = f.length
   end
