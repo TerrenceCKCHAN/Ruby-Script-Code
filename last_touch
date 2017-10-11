@@ -45,7 +45,7 @@ else
   exit(1)
 end
 
-dirFiles = Dir.glob("**")
+dirFiles = Dir.glob("**").select {|f| File.file?(f)}
 gitFiles = `git ls-files`.split("\n")
 res      = Array.new
 max      = 0
