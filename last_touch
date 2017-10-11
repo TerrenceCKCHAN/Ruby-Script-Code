@@ -18,6 +18,7 @@ def extractDateTime_revId(rev_id, date_timeRaw)
 end
 
 def printAllResults(res, max, dirFiles)
+  res.sort_by {|tdId, fName, _| [*tdId.codepoints.map(&:-@), fName]}
   res.each {|tdId, fName, author| puts tdId + fName.ljust(max + 1) + author }
   sortedDirFiles = dirFiles.sort
   sortedDirFiles.each do |f|
