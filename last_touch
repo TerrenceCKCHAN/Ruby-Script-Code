@@ -2,42 +2,63 @@
 # last_touch
 require 'date'
 
-targetDir = ARGV[0]
-Dir.chdir("#{targetDir}")
-allFiles = Dir.glob "**"
-
-
-allFiles.each do |f|
-  date_timeRaw = `git log --pretty=format:"%ad"`
-  date_time    = date_timeRaw.split(" ")
-  rev_id       = `git log --pretty=format:"%h"`
-  author       = `git log --pretty=format:"%an"`
-  dateRaw      = date_time[4] + date_time[1] + date_time[2]
-  date         = Date.parse(dateRaw)
-  time         = date_time[3]
-  timeZoneRaw  = date_time[5]
-  colons       = ":"
-  timeZone     = timeZoneRaw[0..2] + "#{colons}" + timeZoneRaw[3..4]
-  t            = "T"
-  space        = " "
-  openBracket  = "("
-  closeBracket = ")"
-  outputStr    = "#{date}" + "#{t}" + "#{time}" + "#{timeZone}" + 
-                 "#{space}" + "#{f}" + "#{space}" + "#{openBracket}" +
-                 "#{author}" + "#{closeBracket}" 
-  puts "#{outputStr}"
-  
+def removeFile(directory, file)
+  directory.delete(file)
 end
+
+def extractDateTime_revId(rev_id, date_timeRaw)
+  date_time      = date_timeRaw.split(" ")
+  dateRaw        = date_time[4] + date_time[1] + date_time[2]
+  date           = Date.parse(dateRaw)
+  time           = date_time[3]
+  timeZoneRaw    = date_time[5]
+  timeZone       = timeZoneRaw[0..2] + ":" + timeZoneRaw[3..4]
+  dateTime_revId = "#{date}" + "T" + "#{time}" + "#{timeZone}" + "#{rev_id}"  
+  return "#{dateTime_revId}"
+end
+
+def printAllResults(res, max, dirFiles)
+  res.each {|tdId, fName, author| puts tdId + fName.ljust(max + 1) + author }
+  sortedDirFiles = dirFiles.sort
+  sortedDirFiles.each do |f|
+    puts "[***not under version control***]: #{f}"
+  end
+end
+
 
 if ARGV.count == 0 then
   targetDir = `pwd`
 elsif ARGV.count == 1 then
-  subDir = ARGV[0].strip
-  if (
+  subDir    = ARGV[0]
+  targetDir = `pwd` + "/" + subDir
+  if !(File.exist?(targetDir)) then
+    puts "File does not exist"
+    exit(1)
+  else
+    Dir.chdir(targetDir)
+  end
 else 
-  puts "Error"
+  puts "Incorrect number of arguments"
+  exit(1)
+end
 
+dirFiles = Dir.glob("**")
+gitFiles = `git ls-files`.split("\n")
+res      = Array.new
+max      = 0
 
+gitFiles.each do |f|
+  removeFile(dirFiles, f) 
+  rev_id         = " [" + `git log --pretty=format:"%h"`.split(" ")[0] + "]: "
+  date_timeRaw   = `git log --pretty=format:"%ad"`
+  dateTime_revId = extractDateTime_revId(rev_id, date_timeRaw)
+  author         = "(" + `git log --pretty=format:"%an"`.split(" ")[0] + ")"
+  if max <= f.length then
+    max = f.length
+  end
+  res.push([dateTime_revId, f, author])
+end
+printAllResults(res, max, dirFiles)
 
 
 
