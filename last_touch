@@ -3,7 +3,9 @@
 require 'date'
 
 def removeFile(directory, file)
+  if directory.include?(file) then
   directory.delete(file)
+  end
 end
 
 def extractDateTime_revId(rev_id, date_timeRaw)
