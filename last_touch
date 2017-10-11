@@ -8,6 +8,7 @@ def removeFile(directory, file)
   end
 end
 
+## Reformat the dateTime and revId
 def extractDateTime_revId(rev_id, date_timeRaw)
   date_time      = date_timeRaw.split(" ")
   dateRaw        = date_time[4] + date_time[1] + date_time[2]
@@ -28,7 +29,7 @@ def printAllResults(res, max, dirFiles)
   end
 end
 
-
+## Parsing Arguments
 if ARGV.count == 0 then
   targetDir = `pwd`
 elsif ARGV.count == 1 then
@@ -44,7 +45,7 @@ else
   puts "Incorrect number of arguments"
   exit(1)
 end
-
+ 
 dirFiles = Dir.glob("**").select {|f| File.file?(f)}
 gitFiles = `git ls-files`.split("\n")
 res      = Array.new
