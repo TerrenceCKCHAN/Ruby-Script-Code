@@ -30,9 +30,10 @@ if ARGV.count == 0 then
   targetDir = `pwd`
 elsif ARGV.count == 1 then
   subDir    = ARGV[0]
-  targetDir = `pwd` + "/" + subDir
-  if !(File.exist?(targetDir)) then
-    puts "File does not exist"
+  targetDir = `pwd`.strip + "/" + subDir 
+  puts "#{targetDir}"
+  if !(File.exist? File.expand_path(targetDir)) then
+    puts "Directory does not exist"
     exit(1)
   else
     Dir.chdir(targetDir)
